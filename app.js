@@ -205,6 +205,13 @@
   }
 
   function init() {
+    if (/[?&]measure=1(&|$)/.test(location.search)) {
+      $('main').classList.add('hide');
+      var v0 = Object.keys(data.laws).map(function (k) { return data.laws[k].name + ' 시행일 ' + data.laws[k].effective; });
+      $('band-ver').textContent = '법령 판본: ' + v0.join(' / ') + ' (현행 여부 미확인).';
+      window.PortAxMeasure.start(data, items, location.search);
+      return;
+    }
     var v = Object.keys(data.laws).map(function (k) { return data.laws[k].name + ' 시행일 ' + data.laws[k].effective; });
     $('band-ver').textContent = '법령 판본: ' + v.join(' / ') + ' (현행 여부 미확인).';
     ['portact', 'hazmat'].forEach(function (k) { $('c-law').appendChild(h('option', { value: k, text: data.laws[k].name })); });
