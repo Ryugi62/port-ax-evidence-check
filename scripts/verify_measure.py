@@ -20,7 +20,7 @@ try:
         page.on('pageerror', lambda e: errs.append(str(e)))
         page.goto(base + '?measure=1&seed=%d' % SEED)
         res['intro_has_seed'] = ('시드 %d' % SEED) in page.locator('#measure').inner_text()
-        res['name_inputs'] = page.locator('input[type=text],input[type=email]').count()
+        res['name_inputs'] = page.locator('input[type=text]:visible, input[type=email]:visible, textarea:visible').count()
         page.locator('#m-start').click()
         conds = []
         for i in range(12):
