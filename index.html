@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 판정 근거 검수 화면</title>
+<meta name="description" content="AI가 낸 서류 판정 옆에 근거 조문을 펼치고, 숫자·기한이 어긋난 판정을 빨갛게 올리는 검수 화면. 합성 사례와 공개 법령만 사용합니다.">
+<style>
+:root{
+  --bg:#f4f5f7; --card:#ffffff; --text:#191f28; --sub:#59636f; --line:#e5e8eb;
+  --blue:#1b64da; --blue-soft:#e8f3ff; --red:#c62828; --red-soft:#ffebee; 
+  --green:#087f5b; --green-soft:#e6fcf5; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04);
+}
+:root[data-theme="dark"]{ --bg:#101214; --card:#1b1e22; --text:#f2f4f6; --sub:#a9b3c0; --line:#2c3138; --blue:#7ab4ff; --blue-soft:#17283f; --red:#ff8a96; --red-soft:#3a1a20;  --green:#4fd89a; --green-soft:#12302a; --shadow:none; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#101214; --card:#1b1e22; --text:#f2f4f6; --sub:#a9b3c0; --line:#2c3138; --blue:#7ab4ff; --blue-soft:#17283f; --red:#ff8a96; --red-soft:#3a1a20;  --green:#4fd89a; --green-soft:#12302a; --shadow:none; }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",system-ui,sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+button{font:inherit;color:inherit;cursor:pointer}
+#band{position:sticky;top:0;z-index:30;background:var(--text);color:var(--bg);padding:8px 16px;font-size:13px;line-height:1.5}
+#band b{font-weight:700}
+.wrap{max-width:1120px;margin:0 auto;padding:0 16px 96px}
+h1{font-size:26px;line-height:1.35;margin:28px 0 8px;letter-spacing:-.02em}
+.lead{color:var(--sub);margin:0 0 20px;font-size:16px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 0 12px;position:sticky;top:var(--bandh,44px);background:var(--bg);z-index:20}
+.tab{border:0;background:transparent;padding:12px 16px;border-radius:999px;color:var(--sub);font-weight:600;white-space:nowrap;min-height:44px}
+.tab[aria-selected="true"]{background:var(--text);color:var(--bg)}
+.card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:20px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 16px}
+.stat{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+.stat .n{font-size:28px;font-weight:700;letter-spacing:-.02em}
+.stat .l{font-size:13px;color:var(--sub)}
+.stat.red .n{color:var(--red)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:8px 16px;font-size:14px;min-height:40px}
+.chip[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft);color:var(--blue);font-weight:600}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:16px;align-items:start}
+.list{display:flex;flex-direction:column;gap:12px}
+.row{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:16px;border:2px solid transparent;text-align:left;width:100%}
+.row[aria-current="true"]{border-color:var(--blue)}
+.row.weak{border-left:8px solid var(--red)}
+.row .top{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.badge{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:4px 8px}
+.badge.red{background:var(--red-soft);color:var(--red)}
+.badge.gray{background:var(--card);color:var(--sub);border:1px solid var(--line)}
+.badge.ok{background:var(--green-soft);color:var(--green)}
+.badge.blue{background:var(--blue-soft);color:var(--blue)}
+.row .claim{font-weight:600;margin:0 0 8px}
+.row .basis{font-size:13px;color:var(--sub)}
+.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:700;min-height:44px;background:var(--blue);color:#fff}
+.btn.ghost{background:var(--bg);color:var(--text)}
+.btn.danger{background:var(--red-soft);color:var(--red)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.detail{position:sticky;top:calc(var(--bandh,44px) + 64px)}
+.detail h2{font-size:20px;margin:0 0 4px;letter-spacing:-.01em}
+.kv{color:var(--sub);font-size:14px;margin:0 0 12px}
+.verdict{background:var(--bg);border-radius:12px;padding:12px 16px;font-weight:600;margin:0 0 12px}
+.warn{background:var(--red-soft);color:var(--red);border-radius:12px;padding:12px 16px;margin:0 0 12px;font-size:16px}
+.warn ul{margin:8px 0 0;padding-left:20px}
+.okbox{background:var(--green-soft);color:var(--green);border-radius:12px;padding:12px 16px;margin:0 0 12px;font-size:16px}
+.lawhead{font-size:13px;color:var(--sub);margin:0 0 8px}
+.law{white-space:pre-wrap;background:var(--bg);border-radius:12px;padding:16px;font-size:16px;line-height:1.75;max-height:46vh;overflow:auto}
+mark.m{background:var(--blue-soft);color:var(--blue);font-weight:700;border-radius:4px;padding:0 4px}
+mark.o{background:var(--red-soft);color:var(--red);font-weight:700;border-radius:4px;padding:0 4px;text-decoration:underline wavy}
+.where{font-size:12px;color:var(--sub);margin-left:4px}
+details{margin-top:12px} summary{cursor:pointer;color:var(--blue);font-weight:600;min-height:44px;display:flex;align-items:center}
+label{display:block;font-weight:600;margin:12px 0 8px}
+select,input[type=text],textarea{width:100%;font:inherit;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:48px}
+textarea{min-height:88px;resize:vertical}
+.hint{font-size:13px;color:var(--sub);margin:8px 0 0}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:12px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--sub);font-weight:600;font-size:13px}
+.num{font-variant-numeric:tabular-nums;font-weight:700}
+.note{font-size:14px;color:var(--sub)}
+.close{display:none}
+.hide{display:none!important}
+@media (max-width:900px){
+  .split{grid-template-columns:1fr}
+  .detail{position:fixed;inset:0;top:var(--bandh,44px);z-index:40;border-radius:0;overflow:auto;padding:16px 16px 96px;display:none}
+  .detail.open{display:block}
+  .close{display:inline-flex;margin-bottom:12px}
+  .law{max-height:none}
+  h1{font-size:22px}
+}
+@media (max-width:480px){ .stats{gap:8px} .stat{padding:12px} }
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+</style>
+</head>
+<body>
+<div id="band" role="note" aria-label="출처와 한계">
+  <b>합성 사례 · 공개 법령</b> — 판정 예시는 일부러 만든 가상 서류이며 실제 주최 서류가 아닙니다. <b>AI 판정은 보조</b>이고 최종 판단은 담당자입니다. <span id="band-ver"></span>
+</div>
+<div class="wrap">
+  <h1>AI 판정 옆에 근거를 붙여 확인합니다</h1>
+  <p class="lead">숫자·기한이 근거와 어긋난 판정은 빨갛게 맨 위로 올라옵니다. 로그인 없이, 계산은 이 브라우저 안에서만 합니다.</p>
+  <div class="tabs" role="tablist" id="tabs">
+    <button class="tab" role="tab" aria-selected="true" data-tab="review">판정 검수</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="check">직접 대조</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="eval">재현 시험</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="log">확인 요약</button>
+  </div>
+
+  <section id="p-review" role="tabpanel">
+    <div class="stats">
+      <div class="stat red"><div class="n" id="s-weak">-</div><div class="l">빨간 표시</div></div>
+      <div class="stat"><div class="n" id="s-total">-</div><div class="l">전체 판정</div></div>
+      <div class="stat"><div class="n" id="s-done">-</div><div class="l">확인·반려 끝</div></div>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="split">
+      <div class="list" id="list" aria-label="판정 목록"></div>
+      <aside class="card detail" id="detail" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section id="p-check" role="tabpanel" class="hide">
+    <div class="card">
+      <h2 style="margin:0 0 4px;font-size:20px">내 판정 문장으로 대조</h2>
+      <p class="note" style="margin-top:0">판정 문장과 조문 번호를 넣으면 같은 규칙으로 바로 대조합니다. 입력은 서버로 가지 않습니다.</p>
+      <label for="c-law">법령</label>
+      <select id="c-law"></select>
+      <label for="c-ref">조문 번호</label>
+      <input type="text" id="c-ref" placeholder="예: 제16조 또는 제35조제3항" autocomplete="off">
+      <p class="hint">비워 두면 「근거 연결 없음」으로 봅니다.</p>
+      <label for="c-claim">판정 문장</label>
+      <textarea id="c-claim" placeholder="예: 신청인은 1개월 이내에 신고한다."></textarea>
+      <div class="actions">
+        <button class="btn" id="c-run">대조</button>
+        <button class="btn ghost" id="c-ex1">예시: 1개월 vs 15일</button>
+        <button class="btn ghost" id="c-ex2">예시: 근거 없음</button>
+        <button class="btn ghost" id="c-ex3">예시: 숫자 일치</button>
+      </div>
+      <div id="c-out" style="margin-top:16px" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section id="p-eval" role="tabpanel" class="hide"><div class="card" id="eval-out"></div></section>
+
+  <section id="p-log" role="tabpanel" class="hide">
+    <div class="card" id="log-out"></div>
+  </section>
+</div>
+
+<script src="data.js"></script>
+<script src="src/domain/weak.js"></script>
+<script src="src/domain/refs.js"></script>
+<script src="src/domain/review.js"></script>
+<script src="src/application/loader.js"></script>
+<script src="src/application/listing.js"></script>
+<script src="src/application/highlight.js"></script>
+<script src="src/application/reviewlog.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

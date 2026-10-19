@@ -1,0 +1,313 @@
+{
+ "note": "합성 사례, 실제 주최 서류 아님. 판정 문장·근거 번호는 실측-2026-10-20 케이스 원본 그대로.",
+ "cases": [
+  {
+   "id": "B1",
+   "set": "B",
+   "law": "hazmat",
+   "item": "컨테이너 위험물 명세서",
+   "record": "컨테이너번호 있음 / 송하인 이름·주소 있음 / 수하인 이름·주소 칸 비어 있음 / 분류 제3급 인화성 액체류(저인화점) UN1263 페인트 / 수량 200kg",
+   "claim": "적합. 수하인 주소가 없어도 접수한다.",
+   "ref": "제34조제1항제3호",
+   "planted": true,
+   "plantedType": "semantic"
+  },
+  {
+   "id": "B2",
+   "set": "B",
+   "law": "hazmat",
+   "item": "위험물 명세서",
+   "record": "국내 항 간(인천→부산) 운송 / 제8급 부식성 물질 / 송하인 명세서 미작성",
+   "claim": "국내 항 간 운송이라 위험물 명세서 제출은 면제된다.",
+   "ref": "제16조제1항 단서",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "B3",
+   "set": "B",
+   "law": "hazmat",
+   "item": "위험물 명세서",
+   "record": "국제 운송 / 제6.1급 독물 UN2810 / 송하인 주소 있음 / 수하인 칸 비어 있음",
+   "claim": "독물은 수하인 이름·주소를 적어야 하므로 보완 요구한다.",
+   "ref": "제16조제1항제2호",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "B4",
+   "set": "B",
+   "law": "hazmat",
+   "item": "위험물 명세서",
+   "record": "국제 운송 / 해양오염물질로 분류되는 제9급 물질 UN3082 / 명세서에 해양오염물질 표기 없음",
+   "claim": "해양오염물질 표기가 없어 'MARINE POLLUTANT' 기재를 보완 요구한다.",
+   "ref": "제16조제6항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "B5",
+   "set": "B",
+   "law": "hazmat",
+   "item": "위험물 명세서",
+   "record": "국제 운송 / 소량의 위험물(limited quantity) 포장 / 명세서에 소량 표기 없이 일반 품명만 기재",
+   "claim": "소량의 위험물은 별도 표기 없이 일반 화물처럼 적어도 된다.",
+   "ref": "제16조제6항",
+   "planted": true,
+   "plantedType": "semantic"
+  },
+  {
+   "id": "B6",
+   "set": "B",
+   "law": "hazmat",
+   "item": "위험물 명세서",
+   "record": "국제 운송 / 제4.1급 자체반응 물질(운송 중 온도관리 필요) / 제어온도·비상온도 칸 비어 있음",
+   "claim": "제어온도와 비상온도는 적지 않아도 된다.",
+   "ref": "제16조제7항제1호",
+   "planted": true,
+   "plantedType": "semantic"
+  },
+  {
+   "id": "B7",
+   "set": "B",
+   "law": "hazmat",
+   "item": "컨테이너 선적 전 확인",
+   "record": "컨테이너 외부 UN번호 표시 UN1950 / 컨테이너 위험물 명세서 UN1170",
+   "claim": "선장은 표시와 명세서가 일치하는지 확인해야 하고, 둘이 달라 선적 전 확인이 필요하다.",
+   "ref": "제35조제1항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "B8",
+   "set": "B",
+   "law": "hazmat",
+   "item": "컨테이너 선적 전 확인",
+   "record": "훈증소독 컨테이너 / 훈증제 투입 후 12시간 경과 / 훈증소독주의 부표찰 부착됨",
+   "claim": "부표찰이 붙어 있으므로 선적 가능하다.",
+   "ref": "제35조제3항",
+   "planted": true,
+   "plantedType": "semantic"
+  },
+  {
+   "id": "B9",
+   "set": "B",
+   "law": "hazmat",
+   "item": "컨테이너 선적 전 확인",
+   "record": "훈증소독 컨테이너 / 훈증제 투입 후 30시간 경과 / 훈증소독주의 부표찰 부착됨",
+   "claim": "24시간이 지났고 부표찰도 있어 선적 가능하다.",
+   "ref": "제35조제3항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "B10",
+   "set": "B",
+   "law": "hazmat",
+   "item": "컨테이너 위험물 명세서",
+   "record": "한 컨테이너에 격리가 필요한 두 위험물(서로 격리해야 하는 분류 조합) 수납",
+   "claim": "서로 격리해야 하는 위험물도 같은 컨테이너에 수납할 수 있다.",
+   "ref": "제32조제2항",
+   "planted": true,
+   "plantedType": "semantic"
+  },
+  {
+   "id": "B11",
+   "set": "B",
+   "law": "hazmat",
+   "item": "위험물운송적합증 재발급 신청서",
+   "record": "적합증 기재 내용 변경 사유 발생일 10월 1일 / 신청일 10월 18일",
+   "claim": "변경 사유가 생긴 날부터 20일 안이므로 기한 안 신청이다.",
+   "ref": "제24조의4제1항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "B12",
+   "set": "B",
+   "law": "hazmat",
+   "item": "위험물운송적합증 반납",
+   "record": "선박 해체 사유 발생 / 반납 기한 문의",
+   "claim": "사유 발생일부터 20일 안에 반납해야 한다.",
+   "ref": "제24조의5",
+   "planted": true,
+   "plantedType": "number"
+  },
+  {
+   "id": "B13",
+   "set": "B",
+   "law": "hazmat",
+   "item": "위험물 적하일람표",
+   "record": "연해구역 국내항간 운송 / 선장이 적하일람표 미작성",
+   "claim": "국내항간 연해구역 운송은 적하일람표 작성 대상에서 제외된다.",
+   "ref": "제21조제1항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "B14",
+   "set": "B",
+   "law": "hazmat",
+   "item": "위험물 적하일람표",
+   "record": "국제 운송 완료 / 선박소유자가 육상 사무소에 일람표 보관",
+   "claim": "선박소유자는 일람표를 육상 사무소에 1년간 보관해야 한다.",
+   "ref": "제21조제3항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "B15",
+   "set": "B",
+   "law": "hazmat",
+   "item": "컨테이너 위험물 명세서",
+   "record": "선박소유자가 직접 위험물을 컨테이너에 수납 / 선장에게 컨테이너 위험물 명세서만 발급(위험물 명세서 미첨부)",
+   "claim": "선박소유자 수납이면 위험물 명세서 첨부가 필요하다.",
+   "ref": "제34조제3항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "B16",
+   "set": "B",
+   "law": "hazmat",
+   "item": "위험물 명세서",
+   "record": "국제 운송 / 위험물 명세서 제출 없음",
+   "claim": "선장은 명세서가 없으면 해당 위험물 선적을 거부할 수 있다.",
+   "ref": "제16조제5항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "A13",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "예선 선령이 30년인 예선의 정기 예항력검사 유효기간을 따진다.",
+   "claim": "유효기간은 5년이다.",
+   "ref": "제13조제1항제2호",
+   "planted": true,
+   "plantedType": "number"
+  },
+  {
+   "id": "A14",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "선령이 10년인 예선의 정기 예항력검사 유효기간을 따진다.",
+   "claim": "유효기간은 5년이다.",
+   "ref": "제13조제1항제1호",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "A15",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "자체안전관리계획의 변경승인을 신청하려 한다. 변경사유가 3월 1일에 발생했다.",
+   "claim": "변경사유 발생일부터 15일 안에 신청해야 한다.",
+   "ref": "제16조제1항제2호",
+   "planted": true,
+   "plantedType": "number"
+  },
+  {
+   "id": "A16",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "자체안전관리계획 승인 신청서가 접수됐다.",
+   "claim": "관청은 접수일부터 15일 안에 결과를 통보해야 한다.",
+   "ref": "제16조제2항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "A17",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "어느 부두에서 위험물 하역 중지를 긴급히 지시해야 한다.",
+   "claim": "긴급한 경우에는 구두로 통보할 수 있다.",
+   "ref": "제17조제1항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "A18",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "선박에서 불이 나 경보를 울린다.",
+   "claim": "기적이나 사이렌을 단음으로 3회 울린다.",
+   "ref": "제29조제1항",
+   "planted": true,
+   "plantedType": "number"
+  },
+  {
+   "id": "A19",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "총톤수 1,500톤 산적액체위험물 운송선박이 부두에 접안한다.",
+   "claim": "법 제35조제1항제2호의 위험물 운송선박에 해당한다.",
+   "ref": "제19조제2항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "A20",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "위험물 하역 부두에 자동차단밸브를 설치한다.",
+   "claim": "육상구역의 관로마다 1개 이상 설치해야 한다.",
+   "ref": "제19조의3제3항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "A21",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "해양시설에서 용접 수리 공사의 허가를 신청하는 작업자가 해당 시설 소속 직원이다.",
+   "claim": "작업자 자격증 사본은 첨부하지 않아도 된다.",
+   "ref": "제25조제1항제2호",
+   "planted": true,
+   "plantedType": "semantic"
+  },
+  {
+   "id": "A22",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "구두로 출항 중지를 통보받은 선박이 있다.",
+   "claim": "관청은 지체 없이 선박 출항 중지 통지서를 선장에게 발급해야 한다.",
+   "ref": "제30조제2항",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "A23",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "선박이 고장으로 조종할 수 없어 지정된 정박지가 아닌 곳에 정박했다.",
+   "claim": "정박지 지정 예외 사유에 해당한다.",
+   "ref": "제6조제2항제2호",
+   "planted": false,
+   "plantedType": null
+  },
+  {
+   "id": "A24",
+   "set": "A",
+   "law": "portact",
+   "item": "입출항·항만 안전 업무",
+   "record": "선박을 계선하려는 자가 신고서를 낸다.",
+   "claim": "별지 제4호서식 선박계선 신고서를 지방해양수산청장 또는 시ㆍ도지사에게 제출한다.",
+   "ref": "제7조제1항",
+   "planted": false,
+   "plantedType": null
+  }
+ ]
+}
