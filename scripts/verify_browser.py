@@ -76,6 +76,15 @@ try:
         o3 = page.locator('#c-out').inner_text(); res['gwt5_offline_out'] = o3[:80].replace('\n', ' | ')
         res['gwt5_offline_ok'] = '숫자 불일치' in o3
         ctx.set_offline(False)
+        # 위험물 목록 대조 탭(v5): 예시 3종 + 어긋남 표시 + 의미 미검사 배지
+        page.locator('.tab[data-tab=dg]').click()
+        page.locator('#d-ex1').click(); res['dg_ex1_ok'] = '어긋남이 없습니다' in page.locator('#d-out').inner_text()
+        page.locator('#d-ex2').click(); t2 = page.locator('#d-out').inner_text(); res['dg_ex2_class_red'] = 'Class 불일치' in t2 and '목록 Class 3' in t2
+        page.screenshot(path=OUT + '/shot-dg.png')
+        page.locator('#d-ex3').click(); res['dg_ex3_flash_red'] = '인화점 구분 불일치' in page.locator('#d-out').inner_text()
+        page.locator('#d-un').fill('UN9999'); res['dg_unknown_note'] = '대조하지 못했습니다' in page.locator('#d-out').inner_text()
+        page.locator('.tab[data-tab=review]').click()
+        res['badge_semantic_unchecked'] = page.locator('#list .badge.ok', has_text='숫자 이상 없음 · 의미 미검사').count() > 0 and page.locator('#list .badge.ok', has_text='대조 통과').count() == 0
         page.locator('.tab[data-tab=eval]').click()
         res['eval_text'] = page.locator('#eval-out table').inner_text().replace('\n', ' ').replace('\t', ' ')[:400]
         page.screenshot(path=OUT + '/shot-eval.png', full_page=True)

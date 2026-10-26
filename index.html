@@ -101,6 +101,7 @@ th{color:var(--sub);font-weight:600;font-size:13px}
   <div class="tabs" role="tablist" id="tabs">
     <button class="tab" role="tab" aria-selected="true" data-tab="review">판정 검수</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="check">직접 대조</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="dg">위험물 목록 대조</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="eval">재현 시험</button>
     <button class="tab" role="tab" aria-selected="false" data-tab="log">확인 요약</button>
   </div>
@@ -139,6 +140,31 @@ th{color:var(--sub);font-weight:600;font-size:13px}
     </div>
   </section>
 
+  <section id="p-dg" role="tabpanel" class="hide">
+    <div class="card">
+      <h2 style="margin:0 0 4px;font-size:20px">위험물 목록 항목으로 대조</h2>
+      <p class="note" style="margin-top:0">서류에 적힌 UN번호·Class·인화점·용기등급이 서로 맞는지 봅니다. 입력은 서버로 가지 않으며, 입력한 항목끼리만 대조합니다.</p>
+      <label for="d-un">UN번호</label>
+      <input type="text" id="d-un" placeholder="예: UN1263 (목록 발췌: 1263·1170·3066·1950·2810·3082)" autocomplete="off">
+      <label for="d-cls">서류에 적힌 Class</label>
+      <select id="d-cls"><option value="">선택 안 함</option><option>2.1</option><option>2.2</option><option>3</option><option>6.1</option><option>8</option><option>9</option></select>
+      <label for="d-flash">서류에 적힌 인화점 (℃, 밀폐용기)</label>
+      <input type="text" id="d-flash" inputmode="decimal" placeholder="예: 10" autocomplete="off">
+      <label for="d-cat">서류에 적힌 인화점 구분</label>
+      <select id="d-cat"><option value="">선택 안 함</option><option>저인화점</option><option>중인화점</option><option>고인화점</option></select>
+      <label for="d-pg">서류에 적힌 용기등급</label>
+      <select id="d-pg"><option value="">선택 안 함</option><option>I</option><option>II</option><option>III</option></select>
+      <p class="hint">인화점 구분·용기등급 대조는 Class 3(인화성 액체)일 때만 합니다.</p>
+      <div class="actions">
+        <button class="btn" id="d-run">대조</button>
+        <button class="btn ghost" id="d-ex1">예시: 모두 일치</button>
+        <button class="btn ghost" id="d-ex2">예시: Class 어긋남</button>
+        <button class="btn ghost" id="d-ex3">예시: 인화점 구분 어긋남</button>
+      </div>
+      <div id="d-out" style="margin-top:16px" aria-live="polite"></div>
+    </div>
+  </section>
+
   <section id="p-eval" role="tabpanel" class="hide"><div class="card" id="eval-out"></div></section>
 
   <section id="p-log" role="tabpanel" class="hide">
@@ -153,6 +179,7 @@ th{color:var(--sub);font-weight:600;font-size:13px}
 <script src="src/application/loader.js"></script>
 <script src="src/application/listing.js"></script>
 <script src="src/application/highlight.js"></script>
+<script src="src/domain/dglist.js"></script>
 <script src="src/domain/measure.js"></script>
 <script src="src/application/reviewlog.js"></script>
 <script src="measure-ui.js"></script>

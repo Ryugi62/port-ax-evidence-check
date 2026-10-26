@@ -90,7 +90,7 @@
     var l = $('list'); clear(l);
     visibleItems().forEach(function (it) {
       var st = state.reviews[it.id];
-      var top = h('div', { class: 'top' }, [h('span', { class: 'badge gray', text: it.id })].concat(it.weak ? badgesFor(it.verdict) : [h('span', { class: 'badge ok', text: '대조 통과' })]));
+      var top = h('div', { class: 'top' }, [h('span', { class: 'badge gray', text: it.id })].concat(it.weak ? badgesFor(it.verdict) : [h('span', { class: 'badge ok', text: '숫자 이상 없음 · 의미 미검사' })]));
       if (st) top.appendChild(h('span', { class: 'badge blue', text: st.status }));
       var row = h('div', { class: 'row' + (it.weak ? ' weak' : ''), role: 'button', tabindex: '0', 'aria-current': state.selected === it.id ? 'true' : 'false',
         onclick: function () { select(it.id); }, onkeydown: function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(it.id); } } }, [
@@ -141,7 +141,7 @@
 
   function tabSwitch(t) {
     state.tab = t;
-    ['review', 'check', 'eval', 'log'].forEach(function (k) { $('p-' + k).classList.toggle('hide', k !== t); });
+    ['review', 'check', 'dg', 'eval', 'log'].forEach(function (k) { $('p-' + k).classList.toggle('hide', k !== t); });
     Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (b) { b.setAttribute('aria-selected', b.getAttribute('data-tab') === t ? 'true' : 'false'); });
     renderAll();
   }
@@ -153,11 +153,36 @@
     if (!claim.trim()) { out.appendChild(h('p', { class: 'note', text: '판정 문장을 입력하세요.' })); return; }
     var r = P.judgeAgainst(data, lawId, ref, claim);
     if (r.verdict.weak) out.appendChild(h('div', { class: 'warn' }, [h('b', { text: '빨간 표시: ' + r.verdict.reasons.map(function (x) { return REASON_LABEL[x]; }).join(' · ') }), h('ul', {}, reasonLines(r.verdict).map(function (t) { return h('li', { text: t }); }))]));
-    else out.appendChild(h('div', { class: 'okbox', text: '대조 통과: 판정 속 숫자·기한이 근거 원문에서 확인됩니다. (의미 반전은 보지 않습니다)' }));
+    else out.appendChild(h('div', { class: 'okbox', text: '숫자 이상 없음: 판정 속 숫자·기한이 근거 원문에서 확인됩니다. 의미(부정어·의미 반전)는 검사하지 않았으니 원문을 읽어 확인하세요.' }));
     if (r.basis) { out.appendChild(h('p', { class: 'lawhead', text: '근거 ' + r.basis.label + ' · ' + lawName(lawId) })); out.appendChild(basisNode(r.basis, r.verdict)); }
     else if (ref) out.appendChild(h('p', { class: 'note', text: '「' + ref + '」을(를) 이 법령에서 찾지 못했습니다.' }));
   }
   function fillExample(law, ref, claim) { $('c-law').value = law; $('c-ref').value = ref; $('c-claim').value = claim; runCheck(); }
+
+
+  // 화면 C-2: 위험물 목록 항목 대조 (UN번호·Class·용기등급·인화점)
+  var DG_LABEL = { CLASS_MISMATCH: 'Class 불일치', FLASH_CATEGORY_MISMATCH: '인화점 구분 불일치', PG_MISMATCH: '용기등급 불일치' };
+  var DG_NOTE = { UN_NOT_IN_EXCERPT: '이 UN번호는 이 화면의 목록 발췌(6개)에 없어 대조하지 못했습니다.', PG_I_NEEDS_BOILING: '용기등급 I은 초기 끓는점(35℃ 이하)이 있어야 판단할 수 있어 대조하지 않았습니다.', FLASH_OUT_OF_RANGE: '인화점 60℃ 초과는 인화성 액체류 구간 밖이라 인화점 구분·용기등급을 대조하지 않았습니다.' };
+  function dgLines(r) {
+    return r.details.map(function (d) {
+      if (d.field === 'cls') return '서류 Class ' + d.claimed + ' ↔ 목록 Class ' + d.listed.join('·');
+      if (d.field === 'flashCat') return '서류 인화점 구분 ' + d.claimed + ' ↔ 인화점 ' + d.flash + '℃는 ' + d.derived + ' (규칙 제2조 가목)';
+      return '서류 용기등급 ' + d.claimed + ' ↔ 인화점 ' + d.flash + '℃는 용기등급 ' + d.derived + ' (초기 끓는점 35℃ 초과 가정)';
+    });
+  }
+  function runDg() {
+    var out = $('d-out'); clear(out);
+    var un = $('d-un').value, cls = $('d-cls').value, fl = $('d-flash').value.trim(), cat = $('d-cat').value, pg = $('d-pg').value;
+    if (!P.normalizeUn(un)) { out.appendChild(h('p', { class: 'note', text: 'UN번호 4자리(예: UN1263)를 입력하세요.' })); return; }
+    var item = { un: un, cls: cls || null, flash: fl === '' || isNaN(Number(fl)) ? undefined : Number(fl), flashCat: cat || undefined, pg: pg || undefined };
+    var r = P.checkDgItem(item);
+    if (r.entry) out.appendChild(h('p', { class: 'lawhead', text: '목록 발췌: ' + P.normalizeUn(un) + ' · ' + r.entry.name + ' · Class ' + r.entry.classes.join('·') }));
+    if (r.weak) out.appendChild(h('div', { class: 'warn' }, [h('b', { text: '빨간 표시: ' + r.reasons.map(function (x) { return DG_LABEL[x]; }).join(' · ') }), h('ul', {}, dgLines(r).map(function (t) { return h('li', { text: t }); }))]));
+    else if (r.entry) out.appendChild(h('div', { class: 'okbox', text: '입력한 항목 사이에서 어긋남이 없습니다. (입력하지 않은 항목은 보지 않았습니다)' }));
+    r.notes.forEach(function (n) { out.appendChild(h('p', { class: 'note', text: DG_NOTE[n] })); });
+    out.appendChild(h('p', { class: 'hint', text: P.SOURCE_NOTE }));
+  }
+  function fillDg(un, cls, fl, cat, pg) { $('d-un').value = un; $('d-cls').value = cls; $('d-flash').value = fl; $('d-cat').value = cat; $('d-pg').value = pg; runDg(); }
 
   // 재현 시험 (시험용 표지는 이 탭에서만 집계로 쓴다)
   function renderEval() {
@@ -216,6 +241,12 @@
     $('band-ver').textContent = '법령 판본: ' + v.join(' / ') + ' (현행 여부 미확인).';
     ['portact', 'hazmat'].forEach(function (k) { $('c-law').appendChild(h('option', { value: k, text: data.laws[k].name })); });
     Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (b) { b.addEventListener('click', function () { tabSwitch(b.getAttribute('data-tab')); }); });
+    ['d-un', 'd-flash'].forEach(function (id) { $(id).addEventListener('input', runDg); });
+    ['d-cls', 'd-cat', 'd-pg'].forEach(function (id) { $(id).addEventListener('change', runDg); });
+    $('d-run').addEventListener('click', runDg);
+    $('d-ex1').addEventListener('click', function () { fillDg('UN1263', '3', '10', '중인화점', 'II'); });
+    $('d-ex2').addEventListener('click', function () { fillDg('UN1263', '8', '10', '중인화점', 'II'); });
+    $('d-ex3').addEventListener('click', function () { fillDg('UN1263', '3', '10', '고인화점', 'III'); });
     $('c-run').addEventListener('click', runCheck);
     ['c-ref', 'c-claim'].forEach(function (id) { $(id).addEventListener('input', runCheck); });
     $('c-law').addEventListener('change', runCheck);
